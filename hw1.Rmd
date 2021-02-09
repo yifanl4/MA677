@@ -1,0 +1,64 @@
+---
+title: "MA677 HW1"
+author: "Yifan Liu"
+date: "2/7/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Experiment
+
+### Type I error
+
+The Type I error in the hypothesis test is referring to reject the null hypothesis when it is true. So to find the minimum value of p that we can thwart a type I error with significane level $\alpha$ of 0.05, suppose the sample size n=100, we need to find the proportion $\hat{p}$ such that Z statistics equals to 1.64
+$$z =\frac{\hat{p}-p_o}{\sqrt{\frac{p_o(1-p_o)}{n}}}$$
+Here the z-statistics is the critical value of 1.64 and n is 100. So
+$$1.64=\frac{\hat{p}-0.6}{\sqrt{\frac{0.6(1-0.6)}{100}}}$$
+```{r}
+1.64*sqrt(0.6*0.4)/10+0.6
+```
+
+So that the minimum value of $m$ should be 69. 
+
+### Type II error
+
+The Type II error in the hypothesis test is referring to fail to reject the null hypothesis when it is false. So to find the maximum value that we can thwart the Type II error with significance level of 0.05, we need to find the $\hat{p}$ such that the Z statistic is less than -1.64. Here, this -1.64 z-critical values corresponds to some p critical value such that $$P(z\leq-1.64) = P(\hat{p}\leq \hat{p}_{crit}|p_o=0.8)$$
+$$-1.64=\frac{\hat{p}-0.8}{\sqrt{\frac{0.8(1-0.8)}{100}}}$$
+```{r}
+-1.64*sqrt(0.8*0.2)/10+0.8
+```
+
+So the largest value of $m$ should be 73.
+
+## Plot
+
+```{r}
+# define function for m=69 
+alpha_p_69 <- function(p){
+  1-pbinom(69,100,p)
+}
+
+# define function for m=73 
+alpha_p_73 <- function(p){
+  1-pbinom(73,100,p)
+}
+
+# plot
+ggplot()+
+  stat_function(fun = alpha_p_69)+
+  xlim(.4,1)+
+  stat_function(fun = alpha_p_73)+
+  xlim(.4,1)+
+  scale_y_continuous(breaks=seq(0, 1, 0.1))+
+  geom_segment(aes(x=.6,xend=.8,y=.95,yend=.95),colour="#990000", linetype="dashed")+
+  geom_segment(aes(x=.6,xend=.8,y=.05,yend=.05),colour="#990000", linetype="dashed")+
+  geom_segment(aes(x=.6,xend=.6,y=.05,yend=.95),colour="#990000", linetype="dashed")+
+  geom_segment(aes(x=.8,xend=.8,y=.05,yend=.95),colour="#990000", linetype="dashed")+
+  xlab("p")+
+  ylab(" ")
+```
+
+
